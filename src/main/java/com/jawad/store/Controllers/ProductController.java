@@ -13,5 +13,11 @@ import java.util.List;
 @AllArgsConstructor
 @RequestMapping("/products")
 public class ProductController {
+    private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
 
+    @GetMapping
+    public List<ProductDto> getAllProducts() {
+        return productRepository.findAll().stream().map(productMapper::toDto).toList();
+    }
 }
