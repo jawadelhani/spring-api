@@ -1,6 +1,8 @@
 package com.jawad.store.Controllers;
 
+import com.jawad.store.dtos.RegisterUserRequest;
 import com.jawad.store.dtos.UserDto;
+import com.jawad.store.entities.User;
 import com.jawad.store.mappers.UserMapper;
 import com.jawad.store.repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -38,4 +40,14 @@ public class UserController {
         var userDto=new UserDto(u.getId(),u.getName(),u.getEmail());
         return ResponseEntity.ok(userDto);
     }
+
+    @PostMapping
+    public UserDto createUser(@RequestBody RegisterUserRequest request){
+        var user=userMapper.toEntity(request);
+        userRepository.save(user);
+        var userDto=userMapper.toDto(user);
+        return userDto;
+    }
+    
+
 }
