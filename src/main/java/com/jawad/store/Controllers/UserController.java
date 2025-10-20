@@ -1,6 +1,7 @@
 package com.jawad.store.Controllers;
 
 import com.jawad.store.dtos.RegisterUserRequest;
+import com.jawad.store.dtos.UpdateUserRequest;
 import com.jawad.store.dtos.UserDto;
 import com.jawad.store.entities.User;
 import com.jawad.store.mappers.UserMapper;
@@ -9,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Set;
 
@@ -37,17 +39,33 @@ public class UserController {
         if (u==null){
             return ResponseEntity.notFound().build();
         }
-        var userDto=new UserDto(u.getId(),u.getName(),u.getEmail());
+        var userDto=userMapper.toDto(u);
         return ResponseEntity.ok(userDto);
     }
 
     @PostMapping
-    public UserDto createUser(@RequestBody RegisterUserRequest request){
+    public ResponseEntity<UserDto> createUser(
+            @RequestBody RegisterUserRequest request, UriComponentsBuilder uriBuilder){
         var user=userMapper.toEntity(request);
         userRepository.save(user);
         var userDto=userMapper.toDto(user);
-        return userDto;
+        //for responseEntity status 201 ,url where added /{id},not abligatory
+        var uri=uriBuilder.path("/users/{id}").buildAndExpand(userDto.getId()).toUri();
+        return ResponseEntity.created(uri).body(userDto);
     }
-    
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDto> updateUser(@PathVariable(name = "id") Long id,@RequestBody UpdateUserRequest request){
+        //find user as entity
+        var user=userRepository.findById(id).orElse(null);
+        if (user==null){
+            return ResponseEntity.notFound().build();
+        }
+        //user.setName(request.getName());
+        //user.setEmail(request.getEmail());
 
+        userMapper.updateUser(request, user);
+        userRepository.save(user);
+
+        return ResponseEntity.ok(userMapper.toDto(user));
+    }
 }
