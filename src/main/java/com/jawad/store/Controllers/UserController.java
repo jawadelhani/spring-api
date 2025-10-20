@@ -1,5 +1,6 @@
 package com.jawad.store.Controllers;
 
+import com.jawad.store.dtos.ChangePsswordRequest;
 import com.jawad.store.dtos.RegisterUserRequest;
 import com.jawad.store.dtos.UpdateUserRequest;
 import com.jawad.store.dtos.UserDto;
@@ -8,6 +9,7 @@ import com.jawad.store.mappers.UserMapper;
 import com.jawad.store.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -55,7 +57,7 @@ public class UserController {
     }
     @PutMapping("/{id}")
     public ResponseEntity<UserDto> updateUser(@PathVariable(name = "id") Long id,@RequestBody UpdateUserRequest request){
-        //find user as entity
+        //user found as entity
         var user=userRepository.findById(id).orElse(null);
         if (user==null){
             return ResponseEntity.notFound().build();
@@ -77,5 +79,22 @@ public class UserController {
         }
         userRepository.delete(user);
         return ResponseEntity.noContent().build(); //204 status
+    }
+
+    @PostMapping("/{id}/change-password")
+    public ResponseEntity<Void> changePassword(
+            @PathVariable(name = "id") Long id,
+            @RequestBody ChangePsswordRequest request){
+        var user=userRepository.findById(id).orElse(null);
+        if (user==null){
+            return ResponseEntity.notFound().build();
+        }
+        if(!user.getPassword().equals(request.getOldPassword())){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        user.setPassword(request.getNewPassword());
+        userRepository.save(user);
+
+        return ResponseEntity.noContent().build();
     }
 }
