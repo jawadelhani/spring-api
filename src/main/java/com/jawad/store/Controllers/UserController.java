@@ -60,12 +60,22 @@ public class UserController {
         if (user==null){
             return ResponseEntity.notFound().build();
         }
+
         //user.setName(request.getName());
         //user.setEmail(request.getEmail());
-
         userMapper.updateUser(request, user);
+
         userRepository.save(user);
 
         return ResponseEntity.ok(userMapper.toDto(user));
+    }
+    @DeleteMapping("{/id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable(name = "id") Long id){
+        var user=userRepository.findById(id).orElse(null);
+        if (user==null){
+            return ResponseEntity.notFound().build();
+        }
+        userRepository.delete(user);
+        return ResponseEntity.noContent().build(); //204 status
     }
 }
