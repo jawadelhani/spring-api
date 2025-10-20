@@ -1,10 +1,10 @@
 package com.jawad.store.dtos;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 
 @AllArgsConstructor
-@Getter
+@Data
 public class ProductDto {
     private Long id;
     private String name;
