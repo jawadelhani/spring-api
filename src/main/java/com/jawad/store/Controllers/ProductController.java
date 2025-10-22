@@ -4,10 +4,12 @@ package com.jawad.store.Controllers;
 import com.jawad.store.dtos.ProductDto;
 import com.jawad.store.entities.Product;
 import com.jawad.store.mappers.ProductMapper;
+import com.jawad.store.repositories.CategoryRepository;
 import com.jawad.store.repositories.ProductRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
@@ -17,6 +19,7 @@ import java.util.List;
 public class ProductController {
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
+    private final CategoryRepository categoryRepository;
 
     @GetMapping
     public List<ProductDto> getAllProducts(@RequestParam(name = "categoryId",required = false) Byte categoryId) {
@@ -31,11 +34,34 @@ public class ProductController {
         return products.stream().map(productMapper::toDto).toList();
     }
 
-    public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto) {
-        var product=productMapper.toEntity(productDto);
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductDto> getProduct(@PathVariable Long id){
+        var product=productRepository.findById(id).orElse(null);
+        if (product == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(productMapper.toDto(product));
+    }
+
+    @PostMapping
+    public ResponseEntity<ProductDto> createProduct(
+            UriComponentsBuilder uriBuilder,
+            @RequestBody ProductDto productDto) {
+        //we have productDto ,with categoryId but in Product entity we have category not categoryId
+        var category=categoryRepository.findById(productDto.getCategoryId()).orElse(null);
+        if(category==null){
+            return ResponseEntity.badRequest().build();
+        }
+        var product=productMapper.toEntity(productDto);//categoryId is not added
+        product.setCategory(category);
+
         productRepository.save(product);
         productDto.setId(product.getId());
 
-        return ResponseEntity.ok(productDto);
+        var uri=uriBuilder.path("/products/{id}").buildAndExpand(productDto.getId());
+
+        return ResponseEntity.created(uri.toUri()).body(productDto);
     }
+
+
 }
