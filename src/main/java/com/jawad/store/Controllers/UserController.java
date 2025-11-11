@@ -11,9 +11,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -101,5 +104,18 @@ public class UserController {
 
         //204 code status
         return ResponseEntity.noContent().build();
+    }
+
+    //handle errors of validation , returnin message of no validation as (json=map)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String,String>> handleValidationErors(
+            MethodArgumentNotValidException exception){
+        var errors =new HashMap<String,String>();
+        exception.getBindingResult().getAllErrors().forEach((error)->{
+            errors.put(error.getDefaultMessage(),error.getDefaultMessage());
+        });
+
+        return ResponseEntity.badRequest().body(errors);  //400 code status
+
     }
 }
