@@ -1,11 +1,10 @@
 package com.jawad.store.mappers;
 
 import com.jawad.store.dtos.ProductDto;
-import com.jawad.store.dtos.RegisterUserRequest;
 import com.jawad.store.entities.Product;
-import com.jawad.store.entities.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
@@ -15,5 +14,13 @@ public interface ProductMapper {
     ProductDto toDto(Product product);
 
     Product toEntity(ProductDto request);
+
+
+    //target is product entity from product DTO
+    //productDto -> product
+    //productDto don't have id ,so user id become like productDto id=null
+    //we should ignore mapping id
+    @Mapping(target="id",ignore=true)
+    void update(ProductDto request, @MappingTarget Product product);
 
 }

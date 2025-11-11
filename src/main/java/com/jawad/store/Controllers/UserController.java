@@ -4,9 +4,9 @@ import com.jawad.store.dtos.ChangePsswordRequest;
 import com.jawad.store.dtos.RegisterUserRequest;
 import com.jawad.store.dtos.UpdateUserRequest;
 import com.jawad.store.dtos.UserDto;
-import com.jawad.store.entities.User;
 import com.jawad.store.mappers.UserMapper;
 import com.jawad.store.repositories.UserRepository;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -47,7 +47,8 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserDto> createUser(
-            @RequestBody RegisterUserRequest request, UriComponentsBuilder uriBuilder){
+            @Valid @RequestBody RegisterUserRequest request,
+            UriComponentsBuilder uriBuilder){
         var user=userMapper.toEntity(request);
         userRepository.save(user);
         var userDto=userMapper.toDto(user);
@@ -56,7 +57,9 @@ public class UserController {
         return ResponseEntity.created(uri).body(userDto);
     }
     @PutMapping("/{id}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable(name = "id") Long id,@RequestBody UpdateUserRequest request){
+    public ResponseEntity<UserDto> updateUser(
+            @PathVariable(name = "id") Long id,
+            @RequestBody UpdateUserRequest request){
         //user found as entity
         var user=userRepository.findById(id).orElse(null);
         if (user==null){
@@ -67,11 +70,12 @@ public class UserController {
         //user.setEmail(request.getEmail());
         userMapper.updateUser(request, user);
 
+        //we save entities
         userRepository.save(user);
-
+        //we return Dto
         return ResponseEntity.ok(userMapper.toDto(user));
     }
-    @DeleteMapping("{/id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable(name = "id") Long id){
         var user=userRepository.findById(id).orElse(null);
         if (user==null){
@@ -95,6 +99,7 @@ public class UserController {
         user.setPassword(request.getNewPassword());
         userRepository.save(user);
 
+        //204 code status
         return ResponseEntity.noContent().build();
     }
 }
