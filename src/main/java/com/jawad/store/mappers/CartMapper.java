@@ -9,6 +9,7 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface CartMapper {
+    @Mapping(target = "totalPrice",expression = "java(cart.getTotalPrice())")
     CartDto maptoDto(Cart cart);
 
     //mapp totalPrice field to a method (or another field if not same name)
