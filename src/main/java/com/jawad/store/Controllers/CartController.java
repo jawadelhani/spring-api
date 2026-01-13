@@ -52,7 +52,7 @@ public class CartController {
 
         //find product if already in cart ,if yes only add quantity ,if not add it to cart
 
-        var cartItem=cart.getCartItems()
+        var cartItem=cart.getItems()
                 .stream()
                 .filter(i->i.getProduct().getId().equals(product.getId()))
                 .findFirst()
@@ -65,7 +65,7 @@ public class CartController {
             cartItem.setQuantity(1);
             cartItem.setProduct(product);
             cartItem.setCart(cart);
-            cart.getCartItems().add(cartItem);
+            cart.getItems().add(cartItem);
         }
 
         cartRepository.save(cart);
@@ -73,9 +73,15 @@ public class CartController {
         var cartItemDto=cartMapper.toDto(cartItem);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(cartItemDto);
+    }
 
-
-
+    @GetMapping
+    public ResponseEntity<CartDto> getCart(@PathVariable UUID cartId) {
+        var cart=cartRepository.findById(cartId).orElse(null);
+        if(cart==null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(cartMapper.maptoDto(cart));
 
     }
 
