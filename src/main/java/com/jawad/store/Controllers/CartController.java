@@ -53,21 +53,7 @@ public class CartController {
             return ResponseEntity.badRequest().build();
         }
 
-        //find product if already in cart ,if yes only add quantity ,if not add it to cart
-
-        var cartItem=cart.getItem(product.getId());
-
-        if(cartItem!=null){
-            cartItem.setQuantity(cartItem.getQuantity()+1);
-        }else{
-            //cartItem can be null, not cartitem type
-            cartItem=new CartItem();
-            cartItem.setQuantity(1);
-            cartItem.setProduct(product);
-            cartItem.setCart(cart);
-            cart.getItems().add(cartItem);
-        }
-
+        var cartItem=cart.addItem(product);
         cartRepository.save(cart);
 
         var cartItemDto=cartMapper.toDto(cartItem);

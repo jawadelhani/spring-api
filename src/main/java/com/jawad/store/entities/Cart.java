@@ -38,4 +38,23 @@ public class Cart {
                 .findFirst()
                 .orElse(null);
     }
+
+    public CartItem addItem(Product product){
+        //find product if already in cart ,if yes only add quantity ,if not add it to cart
+
+        var cartItem=getItem(product.getId());
+
+        if(cartItem!=null){
+            cartItem.setQuantity(cartItem.getQuantity()+1);
+        }else{
+            //cartItem can be null, not cartitem type
+            cartItem=new CartItem();
+            cartItem.setQuantity(1);
+            cartItem.setProduct(product);
+            cartItem.setCart(this);
+            items.add(cartItem);
+        }
+        return cartItem;
+
+    }
 }
