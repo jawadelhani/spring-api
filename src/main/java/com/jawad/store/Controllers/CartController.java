@@ -55,11 +55,8 @@ public class CartController {
 
         //find product if already in cart ,if yes only add quantity ,if not add it to cart
 
-        var cartItem=cart.getItems()
-                .stream()
-                .filter(i->i.getProduct().getId().equals(product.getId()))
-                .findFirst()
-                .orElse(null);
+        var cartItem=cart.getItem(product.getId());
+
         if(cartItem!=null){
             cartItem.setQuantity(cartItem.getQuantity()+1);
         }else{
@@ -99,11 +96,7 @@ public class CartController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error","cart not found"));
         }
 
-        var cartItem=cart.getItems()
-                .stream()
-                .filter(i->i.getProduct().getId().equals(productId))
-                .findFirst()
-                .orElse(null);
+        var cartItem=cart.getItem(productId);
         if(cartItem==null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error","Product was not found"));
         }
