@@ -5,7 +5,6 @@ import com.jawad.store.dtos.CartDto;
 import com.jawad.store.dtos.CartItemDto;
 import com.jawad.store.dtos.UpdateCartItemRequest;
 import com.jawad.store.entities.Cart;
-import com.jawad.store.entities.CartItem;
 import com.jawad.store.mappers.CartMapper;
 import com.jawad.store.repositories.CartRepository;
 import com.jawad.store.repositories.ProductRepository;
@@ -91,6 +90,22 @@ public class CartController {
         cartRepository.save(cart);
 
         return ResponseEntity.ok(cartMapper.toDto(cartItem));
+    }
+
+    @DeleteMapping("/{cartId}/items/{productId}")
+    public ResponseEntity<?> removeItem(
+            @PathVariable UUID cartId,
+            @PathVariable Long productId
+    ){
+        var cart=cartRepository.getCartWithItems(cartId).orElse(null);
+        if(cart==null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error","cart not found"));
+        }
+
+        cart.removeItem(productId);
+        cartRepository.save(cart);
+
+        return ResponseEntity.noContent().build();
     }
 
 }
