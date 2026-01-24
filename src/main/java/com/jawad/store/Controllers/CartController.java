@@ -114,7 +114,7 @@ public class CartController {
         if(cart==null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error","cart not found"));
         }
-        cart.getItems().clear();
+        cart.clear();
         cartRepository.save(cart);
         return ResponseEntity.noContent().build();
 
