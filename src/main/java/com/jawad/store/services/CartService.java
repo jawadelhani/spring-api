@@ -9,8 +9,11 @@ import com.jawad.store.mappers.CartMapper;
 import com.jawad.store.repositories.CartRepository;
 import com.jawad.store.repositories.ProductRepository;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -73,6 +76,15 @@ public class CartService {
             throw new CartNotFoundException();
         }
         cart.removeItem(productId);
+        cartRepository.save(cart);
+    }
+
+    public void clearCart(UUID cartId){
+        var cart = cartRepository.findById(cartId).orElse(null);
+        if (cart == null) {
+            throw new CartNotFoundException();
+        }
+        cart.clear();
         cartRepository.save(cart);
     }
 
