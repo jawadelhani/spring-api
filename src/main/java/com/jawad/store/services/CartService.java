@@ -8,9 +8,11 @@ import com.jawad.store.exceptions.ProductNotFoundException;
 import com.jawad.store.mappers.CartMapper;
 import com.jawad.store.repositories.CartRepository;
 import com.jawad.store.repositories.ProductRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -49,6 +51,22 @@ public class CartService {
             throw new CartNotFoundException();
         }
         return cartMapper.maptoDto(cart);
+    }
+
+    public CartItemDto updateItem(UUID cartId,Long productId,Integer quantity){
+        var cart = cartRepository.getCartWithItems(cartId).orElse(null);
+        if (cart == null) {
+            throw new CartNotFoundException();
+        }
+
+        var cartItem = cart.getItem(productId);
+        if (cartItem == null) {
+            throw new ProductNotFoundException();
+        }
+
+        cartItem.setQuantity(quantity);
+        cartRepository.save(cart);
+        return cartMapper.toDto(cartItem);
     }
 
 }
