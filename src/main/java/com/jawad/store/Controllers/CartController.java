@@ -8,6 +8,7 @@ import com.jawad.store.entities.Cart;
 import com.jawad.store.mappers.CartMapper;
 import com.jawad.store.repositories.CartRepository;
 import com.jawad.store.repositories.ProductRepository;
+import com.jawad.store.services.CartService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,12 +27,12 @@ public class CartController {
     private final CartRepository cartRepository;
     private final CartMapper cartMapper;
     private final ProductRepository productRepository;
+    private final CartService cartService;
 
     @PostMapping
     public ResponseEntity<CartDto> createCart(UriComponentsBuilder uriBuilder) {
-        var cart = new Cart();
-        cartRepository.save(cart);
-        var cartDto=cartMapper.maptoDto(cart);
+
+        var cartDto=cartService.createCart();
 
         //return new ResponseEntity<>(cartDto, HttpStatus.CREATED);
         var uri=uriBuilder.path("/carts/{id}").buildAndExpand(cartDto.getId());
