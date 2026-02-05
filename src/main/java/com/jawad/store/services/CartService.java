@@ -9,14 +9,13 @@ import com.jawad.store.mappers.CartMapper;
 import com.jawad.store.repositories.CartRepository;
 import com.jawad.store.repositories.ProductRepository;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
 public class CartService {
 
     private CartRepository cartRepository;
@@ -54,7 +53,7 @@ public class CartService {
         return cartMapper.maptoDto(cart);
     }
 
-    public CartItemDto updateItem(UUID cartId,Long productId,Integer quantity){
+    public CartItemDto updateItem(UUID cartId,Long productId,int quantity){
         var cart = cartRepository.getCartWithItems(cartId).orElse(null);
         if (cart == null) {
             throw new CartNotFoundException();

@@ -4,12 +4,8 @@ import com.jawad.store.dtos.AddItemToCartRequest;
 import com.jawad.store.dtos.CartDto;
 import com.jawad.store.dtos.CartItemDto;
 import com.jawad.store.dtos.UpdateCartItemRequest;
-import com.jawad.store.entities.Cart;
 import com.jawad.store.exceptions.CartNotFoundException;
 import com.jawad.store.exceptions.ProductNotFoundException;
-import com.jawad.store.mappers.CartMapper;
-import com.jawad.store.repositories.CartRepository;
-import com.jawad.store.repositories.ProductRepository;
 import com.jawad.store.services.CartService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -26,8 +22,6 @@ import java.util.UUID;
 @RequestMapping("/carts")
 public class CartController {
 
-    private final CartRepository cartRepository;
-    private final CartMapper cartMapper;
     private final CartService cartService;
 
     @PostMapping
@@ -90,10 +84,10 @@ public class CartController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "cart not found"));
     }
 
+
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<Map<String,String>> handleProductNotFound(){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "Product not found in the cart"));
-
 
     }
 
