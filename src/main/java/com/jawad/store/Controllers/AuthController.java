@@ -1,5 +1,6 @@
 package com.jawad.store.Controllers;
 
+import com.jawad.store.config.JwtConfig;
 import com.jawad.store.dtos.JwtResponse;
 import com.jawad.store.dtos.LoginRequest;
 import com.jawad.store.dtos.UserDto;
@@ -25,6 +26,7 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final JwtConfig jwtConfig;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
@@ -42,10 +44,10 @@ public class AuthController {
         var accessToken=jwtService.generateAccessToken(user);
         var refreshToken=jwtService.generateRefreshToken(user);
 
-        var cookie=new Cookie("refresh token",refreshToken);
+        var cookie=new Cookie("refreshToken",refreshToken);
         cookie.setHttpOnly(true);
         cookie.setPath("/auth/refresh");
-        cookie.setMaxAge(604800); // 7d
+        cookie.setMaxAge(jwtConfig.getRefreshTokenExpiration()); // 7d
         cookie.setSecure(true);
         response.addCookie(cookie);
 
