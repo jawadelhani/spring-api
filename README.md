@@ -102,10 +102,23 @@ Or set the same variables in your IDE run configuration.
 - `services` — Business logic (e.g. `JwtService`)
 - `resources/db/migration` — Flyway SQL
 
+
 ---
 
-Made with ☕ and Spring Boot.
-![App Screenshot](images/1.png)
-![App Screenshot](images/2.png)
-![App Screenshot](images/3.png)
-![App Screenshot](images/4.png)
+## 📸 Screenshots
+
+<p align="center">
+  <img src="images/1.png" width="400" style="margin:10px;"/>
+  <img src="images/2.png" width="400" style="margin:10px;"/>
+</p>
+
+<p align="center">
+  <img src="images/3.png" width="400" style="margin:10px;"/>
+  <img src="images/4.png" width="400" style="margin:10px;"/>
+</p>
+
+---
+
+<p align="center">
+  Made with ☕ and <strong>Spring Boot</strong>
+</p>
