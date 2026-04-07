@@ -105,3 +105,7 @@ Or set the same variables in your IDE run configuration.
 ---
 
 Made with ☕ and Spring Boot.
+![App Screenshot](images/1.png)
+![App Screenshot](images/2.png)
+![App Screenshot](images/3.png)
+![App Screenshot](images/4.png)
