@@ -108,13 +108,25 @@ Or set the same variables in your IDE run configuration.
 ## 📸 Screenshots
 
 <p align="center">
-  <img src="images/1.png" width="400" style="margin:10px;"/>
-  <img src="images/2.png" width="400" style="margin:10px;"/>
+  <img src="images/1.png" width="600"/>
 </p>
 
+<br/>
+
 <p align="center">
-  <img src="images/3.png" width="400" style="margin:10px;"/>
-  <img src="images/4.png" width="400" style="margin:10px;"/>
+  <img src="images/2.png" width="600"/>
+</p>
+
+<br/>
+
+<p align="center">
+  <img src="images/3.png" width="600"/>
+</p>
+
+<br/>
+
+<p align="center">
+  <img src="images/4.png" width="600"/>
 </p>
 
 ---
